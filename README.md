@@ -32,7 +32,7 @@ ShellCanvas does not currently expose SSH port forwarding to custom adapters. Us
 - Queries materialize at most 10,000 rows and 8 MiB for five minutes. Pages are capped below the adapter frame ceiling. Truncated results are marked.
 - Integers and decimals are strings, preserving values beyond JavaScript's exact range. Binary is base64. Unsupported database types show a placeholder and warning instead of silent coercion.
 - **Spreadsheet-safe CSV** defaults on. It prefixes text-like cells and headers beginning with `=`, `+`, `-`, `@`, tab, or carriage return with an apostrophe. Turn it off for raw displayed text. Null is an empty field; CSV is UTF-8 with BOM, quoted where needed, with CRLF lines.
-- Save runs as a leased adapter job. Closing or rebinding the app stops its lease, so an abandoned picker cannot commit later. Once atomic commit starts, cancellation truthfully reports that it is too late.
+- Save runs as a leased adapter job. Closing or rebinding requests cancellation; abandoned jobs cannot commit once their polling lease expires. Once atomic commit starts, cancellation truthfully reports that it is too late.
 
 ## Build and test
 
