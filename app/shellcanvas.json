@@ -1,0 +1,10 @@
+{
+  "$schema": "./node_modules/@techartdev/shellcanvas-app-sdk/schemas/app-manifest.schema.json",
+  "format": 1,
+  "kind": "app",
+  "id": "dev.shellcanvas.database",
+  "version": "0.1.0",
+  "title": "ShellCanvas Database",
+  "description": "Browse database schemas, run SQL, inspect typed results and export CSV.",
+  "permissions": ["services.dev.shellcanvas.database"]
+}

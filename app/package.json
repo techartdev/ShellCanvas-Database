@@ -1,0 +1,15 @@
+{
+  "name": "dev.shellcanvas.database.app",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "tsc --noEmit && node --test paging.test.mjs",
+    "build": "npm run check && shellcanvas-app build .",
+    "repository": "shellcanvas-app repository .. --path app/dist/app.shellcanvas.json --description \"Query SQL Server, PostgreSQL, MySQL/MariaDB and SQLite from ShellCanvas.\""
+  },
+  "devDependencies": {
+    "@techartdev/shellcanvas-app-sdk": "file:../vendor/techartdev-shellcanvas-app-sdk-0.1.11.tgz",
+    "typescript": "5.8.3"
+  }
+}
