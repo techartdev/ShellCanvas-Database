@@ -77,3 +77,7 @@ Use a fresh output directory for each package. The source pins SQLx 0.8.6 and us
 - `dist/` — installable checked-in artifacts
 
 Licensed under MPL-2.0. See [LICENSE](LICENSE).
+
+### Sandboxed connection regression
+
+After building the app, run `node app/scripts/check-sandbox.mjs` with Playwright available. If supplied externally, set `PLAYWRIGHT_MODULE` to its entry point and optionally `BROWSER_EXECUTABLE` to a Chromium/Edge executable. This exercises the actual built package and SDK inside an `allow-scripts` iframe with form submission blocked, covering SQL Server click, Enter retry, SQLite click, required-field validation and visible connection errors. The broker is a local test fixture; no real database or credentials are used.
