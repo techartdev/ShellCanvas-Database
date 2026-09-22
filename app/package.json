@@ -6,7 +6,8 @@
   "scripts": {
     "check": "tsc --noEmit && node --test paging.test.mjs",
     "build": "npm run check && shellcanvas-app build .",
-    "repository": "node scripts/repository.mjs"
+    "repository": "node scripts/repository.mjs",
+    "verify:repository": "node scripts/verify-repository.mjs"
   },
   "devDependencies": {
     "@techartdev/shellcanvas-app-sdk": "file:../vendor/techartdev-shellcanvas-app-sdk-0.1.11.tgz",
