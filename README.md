@@ -14,7 +14,7 @@ Open Database, choose **Connect database**, then select SQL Server, PostgreSQL, 
 
 Each app window owns its connection; Disconnect or closing the window releases it. You can still use a database service already configured on an accepted workspace. The app follows the desktop's dark/light theme and updates when it changes.
 
-There is no automatic network or SSH-host instance discovery. Connections originate from the desktop PC. SQL Server named instances require their TCP port; SQLite files are local to this PC. Schema/table enumeration starts after a connection succeeds.
+There is no automatic network or SSH-host instance discovery. Network connections default to the connected SSH host: 127.0.0.1 means that remote host. The SSH server must allow TCP forwarding. Choose **This PC (direct connection)** explicitly for local access. SQL Server named instances require their TCP port. SQLite remains a local-file option; remote SQLite execution is not implemented. Schema/table enumeration starts after a connection succeeds.
 
 Keep this PR unmerged until a compatible desktop release ships.
 
@@ -34,7 +34,7 @@ Set `provider` to `sqlite`, `postgresql`, `mysql`, `mariadb`, or `sqlserver`.
 - TLS verifies the certificate and host identity by default. Trusting a server certificate without identity verification is an explicit insecure opt-in for private/self-signed deployments.
 - Password fields are not retained in saved ShellCanvas profiles; supply the password when connecting.
 
-ShellCanvas does not currently expose SSH port forwarding to custom adapters. Use an endpoint reachable from the adapter machine or manage a tunnel separately.
+The app requires the compatible desktop PR and the `host.tcp` permission to use SSH routing. The desktop pins the accepted host connection, opens an SSH direct-tcpip channel, and supplies a loopback transport to this app’s private connector. UI and database drivers run on the desktop; SQL runs on the remote database. Closing/replacing the host retires its tunnels without reconnecting or falling back to the PC. Database TLS hostname verification remains unchanged. See `vendor/sqlx-core/SHELLCANVAS.md` for the transport-only SQLx patch.
 
 ## Results and CSV
 

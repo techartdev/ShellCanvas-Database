@@ -3,15 +3,15 @@
   "id": "dev.shellcanvas.database",
   "name": "ShellCanvas Database",
   "version": "0.1.0",
-  "description": "Direct database connections for SQL Server, PostgreSQL, MySQL/MariaDB and SQLite.",
+  "description": "Database connections through the connected SSH host, or directly from this PC.",
   "platform": "windows-x86_64",
   "entrypoint": "bin/shellcanvas-device.exe",
   "arguments": [],
   "files": [
     {
       "path": "bin/shellcanvas-device.exe",
-      "size": 9617920,
-      "sha256": "3997caf344c4ee0119cbc036ce6813a40150f1ee3b1c35489ae3cb7f22e89bea",
+      "size": 9608704,
+      "sha256": "76e5f2a08e81c76fe5cfcab78731410a5900750fe8d615484e637a1f0ab287f8",
       "executable": true
     }
   ],
@@ -78,6 +78,13 @@
       "kind": "text",
       "required": false,
       "default": ""
+    },
+    {
+      "id": "tcpProxyPort",
+      "label": "Managed SSH transport port (leave 0)",
+      "kind": "number",
+      "required": false,
+      "default": 0
     }
   ]
 }

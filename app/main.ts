@@ -30,11 +30,11 @@ const root = document.querySelector<HTMLDivElement>("#root")!;
 root.innerHTML = `
 <main>
   <header class="app-header"><div class="app-heading"><span class="app-icon">${databaseIcon}</span><div><h1>Database</h1><p id="destination">No database connected</p></div></div><div class="header-actions"><span id="connection-state" class="connection-state">Not connected</span><button id="connection-settings">Connect database</button><button id="disconnect" hidden>Disconnect</button></div></header>
-  <section id="setup" class="setup"><div class="setup-card"><span class="setup-icon">${databaseIcon}</span><h2 id="setup-title">Connect a database</h2><p id="setup-detail">Choose a database server or an existing SQLite file to browse tables and run queries.</p><div class="provider-list"><span>SQL Server</span><span>PostgreSQL</span><span>MySQL / MariaDB</span><span>SQLite</span></div><button id="setup-connect" class="primary">Connect database</button><button id="retry">Check connection again</button><p class="setup-note">Connections run from this PC. Your SSH host is not automatically a database connection.</p></div></section>
+  <section id="setup" class="setup"><div class="setup-card"><span class="setup-icon">${databaseIcon}</span><h2 id="setup-title">Connect a database</h2><p id="setup-detail">Choose a database server or an existing SQLite file to browse tables and run queries.</p><div class="provider-list"><span>SQL Server</span><span>PostgreSQL</span><span>MySQL / MariaDB</span><span>SQLite</span></div><button id="setup-connect" class="primary">Connect database</button><button id="retry">Check connection again</button><p class="setup-note">Database connections use your connected SSH host. No public database port is needed.</p></div></section>
   <section id="workspace" class="workspace" hidden><aside><div class="side-head"><h2>Schema</h2><button id="reload" class="icon-button" title="Refresh schemas" aria-label="Refresh schemas">↻</button></div><div id="tree"></div></aside><div class="work"><div class="editor-heading"><label for="sql">SQL query</label><span>Ctrl+Enter to run</span></div><textarea id="sql" spellcheck="false" placeholder="SELECT * FROM …;"></textarea><div class="toolbar"><button id="run" class="primary" disabled>Run query</button><button id="cancel" disabled>Cancel</button><span class="query-note">SQL uses your database account’s permissions.</span></div><p id="warnings" role="status" hidden></p><div class="result-head"><h2 id="summary">Results</h2><div><label class="safe"><input id="safe" type="checkbox" checked> Spreadsheet-safe CSV</label><button id="export" disabled>Save CSV…</button></div></div><div class="grid-wrap"><table><thead></thead><tbody></tbody></table><div id="empty">Run a query to see results.</div></div><div class="pager"><span id="page"></span><button id="prev" disabled>Previous</button><button id="next" disabled>Next</button></div></div></section>
   <footer><span id="status" role="status">Checking the app connection…</span><span>Database workspace</span></footer>
 </main>
-<dialog id="connect-dialog" aria-labelledby="connect-title"><form id="connect-form"><div class="dialog-heading"><span class="app-icon">${databaseIcon}</span><button type="button" id="close-dialog" class="icon-button" aria-label="Close connection settings">×</button></div><h2 id="connect-title">Connect a database</h2><p>Choose an endpoint reachable from this PC. This does not scan your SSH host or network for database instances.</p><fieldset id="connection-fields"><label>Database provider<select id="db-provider"><option value="sqlserver">Microsoft SQL Server</option><option value="postgresql">PostgreSQL</option><option value="mysql">MySQL</option><option value="mariadb">MariaDB</option><option value="sqlite">SQLite</option></select></label><div id="network-fields"><div class="field-row"><label class="host-field">Host (reachable from this PC)<input id="db-host" placeholder="db.example.com" autocomplete="off"></label><label class="port-field">Port<input id="db-port" type="number" min="1" max="65535" value="1433"></label></div><label>Database<input id="db-name" placeholder="Database name" autocomplete="off"></label><div class="field-row"><label>Username<input id="db-user" autocomplete="off"></label><label>Password<input id="db-password" type="password" autocomplete="off"></label></div><label class="checkbox"><input id="db-tls" type="checkbox" checked> Use TLS</label><label class="checkbox"><input id="db-trust" type="checkbox"> Trust a self-signed server certificate</label><p class="field-hint">127.0.0.1 means this PC, not your SSH host. For SQL Server named instances, enter the server host and its TCP port.</p></div><div id="sqlite-fields" hidden><label>SQLite file on this PC<input id="db-path" placeholder="C:/data/example.db" autocomplete="off"></label><p class="field-hint">Choose an existing file. This path refers to the PC running ShellCanvas, not your SSH host.</p></div></fieldset><p id="connect-error" class="error" role="alert" hidden></p><div class="dialog-actions"><span>Passwords are not saved.</span><button id="connect-cancel" type="button">Cancel</button><button id="connect-submit" class="primary" type="button">Connect</button></div></form></dialog>`;
+<dialog id="connect-dialog" aria-labelledby="connect-title"><form id="connect-form"><div class="dialog-heading"><span class="app-icon">${databaseIcon}</span><button type="button" id="close-dialog" class="icon-button" aria-label="Close connection settings">×</button></div><h2 id="connect-title">Connect a database</h2><p>Connect to a database on your SSH host or its network. Enter its address and credentials.</p><fieldset id="connection-fields"><label>Database provider<select id="db-provider"><option value="sqlserver">Microsoft SQL Server</option><option value="postgresql">PostgreSQL</option><option value="mysql">MySQL</option><option value="mariadb">MariaDB</option><option value="sqlite">SQLite (local file)</option></select></label><div id="network-fields"><label>Connect through<select id="db-route"><option value="ssh">Connected SSH host</option><option value="direct">This PC (direct connection)</option></select></label><p id="route-hint" class="field-hint"></p><div class="field-row"><label class="host-field">Database host<input id="db-host" placeholder="db.example.com" autocomplete="off"></label><label class="port-field">Port<input id="db-port" type="number" min="1" max="65535" value="1433"></label></div><label>Database<input id="db-name" placeholder="Database name" autocomplete="off"></label><div class="field-row"><label>Username<input id="db-user" autocomplete="off"></label><label>Password<input id="db-password" type="password" autocomplete="off"></label></div><label class="checkbox"><input id="db-tls" type="checkbox" checked> Use TLS</label><label class="checkbox"><input id="db-trust" type="checkbox"> Trust a self-signed server certificate</label><p class="field-hint">For SQL Server named instances, enter the database server and its TCP port.</p></div><div id="sqlite-fields" hidden><label>SQLite file on this PC<input id="db-path" placeholder="C:/data/example.db" autocomplete="off"></label><p class="field-hint">Choose an existing file. This path refers to the PC running ShellCanvas, not your SSH host.</p></div></fieldset><p id="connect-error" class="error" role="alert" hidden></p><div class="dialog-actions"><span>Passwords are not saved.</span><button id="connect-cancel" type="button">Cancel</button><button id="connect-submit" class="primary" type="button">Connect</button></div></form></dialog>`;
 const $ = <T extends HTMLElement = HTMLElement>(id: string) =>
   document.getElementById(id)! as T;
 const input = (id: string) => $<HTMLInputElement>(id);
@@ -60,6 +60,8 @@ let previousOffsets: number[] = [],
 let privateConnection = false,
   companionAvailable = false,
   destination = "";
+let sshAvailable = false,
+  sshHostName = "";
 let closed = false;
 const pageSize = 100;
 function message(error: unknown) {
@@ -404,6 +406,15 @@ async function refresh(force = false) {
         )) as unknown as ServiceMethodInfo[])
       : systemMethods;
     if (op !== bindOp || closed) return;
+    const routes = companionAvailable
+      ? ((await client
+          .call("system.companion.routes")
+          .catch(() => ({ ssh: false }))) as { ssh: boolean })
+      : { ssh: false };
+    if (op !== bindOp || closed) return;
+    sshAvailable = routes.ssh;
+    sshHostName = env.host?.name ?? "connected host";
+    updateRoute();
     const next = JSON.stringify([
       own.connected,
       own.binding,
@@ -455,11 +466,20 @@ async function refresh(force = false) {
     }
   }
 }
+function updateRoute() {
+  const remote = input("db-route").value === "ssh";
+  $("route-hint").textContent = remote
+    ? sshAvailable
+      ? "Through " + sshHostName + ". 127.0.0.1 means that remote host."
+      : "Connect an SSH host first. If it was reconnected, accept the new connection."
+    : "Direct from this PC. 127.0.0.1 means this PC.";
+}
 function selectProvider() {
   const sqlite = input("db-provider").value === "sqlite";
   $("network-fields").hidden = sqlite;
   $("sqlite-fields").hidden = !sqlite;
   for (const id of [
+    "db-route",
     "db-host",
     "db-port",
     "db-name",
@@ -488,6 +508,8 @@ function selectProvider() {
 function openConnection() {
   if (!companionAvailable) return;
   $("connect-error").hidden = true;
+  if (!input("db-host").value) input("db-host").value = "127.0.0.1";
+  updateRoute();
   dialog.showModal();
   $<HTMLSelectElement>("db-provider").focus();
 }
@@ -499,6 +521,16 @@ function closeConnection() {
 async function connect() {
   if (connectController || !$<HTMLFormElement>("connect-form").reportValidity())
     return;
+  const route =
+    input("db-provider").value === "sqlite"
+      ? "direct"
+      : input("db-route").value;
+  if (route === "ssh" && !sshAvailable) {
+    $("connect-error").textContent =
+      "Connect an SSH host first and allow host TCP access when reviewing this app.";
+    $("connect-error").hidden = false;
+    return;
+  }
   const active = new AbortController();
   connectController = active;
   setControls();
@@ -525,14 +557,14 @@ async function connect() {
     selected === "sqlite"
       ? input("db-path").value.trim()
       : `${configuration.host}:${configuration.port} / ${configuration.database}`;
-  status.textContent = `Connecting to ${target}…`;
+  status.textContent = `Connecting to ${target}${route === "ssh" ? ` through ${sshHostName}` : " from this PC"}…`;
   try {
     await client.call(
       "system.companion.connect",
-      { configuration },
+      { configuration, route },
       active.signal,
     );
-    destination = `${$<HTMLSelectElement>("db-provider").selectedOptions[0].text} · ${target}`;
+    destination = `${$<HTMLSelectElement>("db-provider").selectedOptions[0].text} · ${target} · ${route === "ssh" ? sshHostName : "this PC"}`;
     input("db-password").value = "";
     dialog.close();
   } catch (error) {
@@ -622,6 +654,7 @@ $("connect-form").addEventListener("keydown", (event) => {
   }
 });
 $("db-provider").addEventListener("change", selectProvider);
+$("db-route").addEventListener("change", updateRoute);
 input("db-tls").addEventListener("change", () => {
   input("db-trust").disabled = !input("db-tls").checked;
 });

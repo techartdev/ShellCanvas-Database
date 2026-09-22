@@ -7,7 +7,7 @@
   "description": "Query SQL Server, PostgreSQL, MySQL/MariaDB and SQLite from ShellCanvas.",
   "package": {
     "path": "app/dist/app.shellcanvas.json",
-    "sha256": "fde928aa57b01b80492ff6ada7156e8c2d882370e5b5616fda38038ba65a5587"
+    "sha256": "205d6c4717defa9713cee321af318b3092fceb88264ffce67aca2a16af6a3bc1"
   },
   "nativeAdapter": {
     "id": "dev.shellcanvas.database",
@@ -16,7 +16,7 @@
       {
         "platform": "windows-x86_64",
         "path": "dist/adapter-windows-x86_64/adapter.json",
-        "sha256": "7ba1b87f1dc61aa0fda54731890a3923b62278b2df3094da56b7c18c4f953378"
+        "sha256": "1de82c8002ba973dc7ea39c4c687e37b66a58adacb9e879b1abce87ee982cc1c"
       }
     ]
   }
