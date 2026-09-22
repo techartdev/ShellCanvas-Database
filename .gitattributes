@@ -1,0 +1,2 @@
+app/dist/app.shellcanvas.json -text
+dist/adapter-windows-x86_64/bin/*.exe -text
