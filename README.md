@@ -8,13 +8,15 @@ Version 0.1.0 browses schemas and tables, runs SQL, displays bounded typed resul
 
 ## Install the initial Windows build
 
-With a ShellCanvas desktop release that supports repository-declared native
-companions, open **App Manager → Add apps → From GitHub** and enter
-`techartdev/ShellCanvas-Database`. One review shows the app permission and the
-pinned Windows native connector. Approve both, then edit a connection, add
-**ShellCanvas Database** as a source, configure it, and select
-`dev.shellcanvas.database` under **Additional services**. Installation does not
-start the connector or request database credentials.
+With the desktop build in ShellCanvas PR #23, open **App Manager → Add apps → From GitHub** and enter `techartdev/ShellCanvas-Database` with reference `codex/unified-native-install`. Review and install the app and its Windows connector together.
+
+Open Database, choose **Connect database**, then select SQL Server, PostgreSQL, MySQL, MariaDB or SQLite. Enter the host, TCP port, database and credentials, or an existing SQLite file path. The app shows the endpoint and actual connection state. No database connection starts until you press Connect. Passwords are not saved.
+
+Each app window owns its connection; Disconnect or closing the window releases it. You can still use a database service already configured on an accepted workspace. The app follows the desktop's dark/light theme and updates when it changes.
+
+There is no automatic network or SSH-host instance discovery. Connections originate from the desktop PC. SQL Server named instances require their TCP port; SQLite files are local to this PC. Schema/table enumeration starts after a connection succeeds.
+
+Keep this PR unmerged until a compatible desktop release ships.
 
 ShellCanvas 0.1.11 and older require the existing manual order: install
 `dist/adapter-windows-x86_64/adapter.json` under **Connection adapters**, add and
