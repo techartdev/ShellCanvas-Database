@@ -8,11 +8,18 @@ Version 0.1.0 browses schemas and tables, runs SQL, displays bounded typed resul
 
 ## Install the initial Windows build
 
-1. Download or clone this repository.
-2. In ShellCanvas, open **Apps → Connection adapters → Install adapter** and choose `dist/adapter-windows-x86_64/adapter.json`. Review the native executable and install it.
-3. Edit a connection, add **ShellCanvas Database** as a source, configure it, and select `dev.shellcanvas.database` under **Additional services**.
-4. Open **App Manager → Add apps → From GitHub** and enter `techartdev/ShellCanvas-Database`, or choose `app/dist/app.shellcanvas.json` locally. Review and grant `services.dev.shellcanvas.database`.
-5. Connect the workspace and open **ShellCanvas Database**.
+With a ShellCanvas desktop release that supports repository-declared native
+companions, open **App Manager → Add apps → From GitHub** and enter
+`techartdev/ShellCanvas-Database`. One review shows the app permission and the
+pinned Windows native connector. Approve both, then edit a connection, add
+**ShellCanvas Database** as a source, configure it, and select
+`dev.shellcanvas.database` under **Additional services**. Installation does not
+start the connector or request database credentials.
+
+ShellCanvas 0.1.11 and older require the existing manual order: install
+`dist/adapter-windows-x86_64/adapter.json` under **Connection adapters**, add and
+configure that source, then install `app/dist/app.shellcanvas.json` or the app
+from GitHub and grant `services.dev.shellcanvas.database`.
 
 This app is intentionally not in ShellCanvas's recommended catalog yet. The checked-in Windows package is the initial test build. PostgreSQL, MySQL/MariaDB, and SQL Server paths compile but still need disposable-server and user acceptance testing; SQLite has an automated real-database integration test.
 
@@ -47,6 +54,10 @@ npm run build
 npm run repository
 cd ..
 ```
+
+The repository command uses the pinned 0.1.11 app SDK for the app artifact, then
+validates and reattaches the native dependency with a freshly computed adapter
+manifest hash. Regeneration therefore cannot silently drop or stale the pin.
 
 Build/package the native adapter with the vendored ShellCanvas 0.1.11 SDK:
 
