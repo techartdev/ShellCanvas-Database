@@ -6,5 +6,8 @@
   "version": "0.1.0",
   "title": "ShellCanvas Database",
   "description": "Browse database schemas, run SQL, inspect typed results and export CSV.",
-  "permissions": ["services.dev.shellcanvas.database"]
+  "permissions": [
+    "services.dev.shellcanvas.database",
+    "host.tcp"
+  ]
 }

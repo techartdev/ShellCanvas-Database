@@ -4,9 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "check": "tsc --noEmit && node --test paging.test.mjs",
+    "check": "tsc --noEmit && node --test paging.test.mjs connection-state.test.mjs",
     "build": "npm run check && shellcanvas-app build .",
-    "repository": "shellcanvas-app repository .. --path app/dist/app.shellcanvas.json --description \"Query SQL Server, PostgreSQL, MySQL/MariaDB and SQLite from ShellCanvas.\""
+    "repository": "node scripts/repository.mjs",
+    "verify:repository": "node scripts/verify-repository.mjs"
   },
   "devDependencies": {
     "@techartdev/shellcanvas-app-sdk": "file:../vendor/techartdev-shellcanvas-app-sdk-0.1.11.tgz",

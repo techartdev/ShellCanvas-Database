@@ -16,6 +16,7 @@ pub struct Configuration {
     #[serde(default)]
     pub host: String,
     pub port: Option<u16>,
+    pub tcp_proxy_port: Option<u16>,
     #[serde(default)]
     pub database: String,
     #[serde(default)]
@@ -39,6 +40,22 @@ pub enum Database {
 
 impl Database {
     pub async fn connect(c: Configuration) -> Result<Self, String> {
+        if let Some(proxy) = c.tcp_proxy_port.filter(|port| *port > 0) {
+            let port = match c.provider.to_ascii_lowercase().as_str() {
+                "postgres" | "postgresql" => Some(5432),
+                "mysql" | "mariadb" => Some(3306),
+                "sqlserver" | "mssql" => None,
+                _ => return Err("SSH TCP connections require a network database provider".into()),
+            };
+            if let Some(default_port) = port {
+                sqlx_core::net::set_tcp_proxy(
+                    &c.host,
+                    c.port.filter(|p| *p > 0).unwrap_or(default_port),
+                    proxy,
+                )
+                .map_err(|_| "Could not configure the database SSH transport".to_owned())?;
+            }
+        }
         match c.provider.to_ascii_lowercase().as_str() {
             "postgres" | "postgresql" => {
                 let options = sqlx::postgres::PgConnectOptions::new()
@@ -643,7 +660,12 @@ async fn sqlserver_client(c: &Configuration) -> Result<TdsClient, String> {
     if c.trust_server_certificate {
         config.trust_cert();
     }
-    let tcp = tokio::net::TcpStream::connect(config.get_addr())
+    let address = c
+        .tcp_proxy_port
+        .filter(|port| *port > 0)
+        .map(|port| format!("127.0.0.1:{port}"))
+        .unwrap_or_else(|| config.get_addr());
+    let tcp = tokio::net::TcpStream::connect(address)
         .await
         .map_err(|_| "Could not connect to SQL Server".to_owned())?;
     tcp.set_nodelay(true)
@@ -795,6 +817,7 @@ mod tests {
             provider: "sqlite".into(),
             host: "".into(),
             port: None,
+            tcp_proxy_port: None,
             database: "".into(),
             username: "".into(),
             password: "".into(),
@@ -830,6 +853,7 @@ mod tests {
             provider: "sqlite".into(),
             host: "".into(),
             port: None,
+            tcp_proxy_port: None,
             database: "".into(),
             username: "".into(),
             password: "".into(),
@@ -863,6 +887,7 @@ mod tests {
             provider: "sqlite".into(),
             host: "".into(),
             port: None,
+            tcp_proxy_port: None,
             database: "".into(),
             username: "".into(),
             password: "".into(),
@@ -889,5 +914,61 @@ mod tests {
             )),
             "12345678901234567890123456789012345678"
         );
+    }
+}
+
+#[cfg(test)]
+mod transport_tests {
+    use sqlx::Connection;
+    #[tokio::test]
+    async fn pg_and_mysql_use_pinned_proxy_without_local_dns_or_direct_fallback() {
+        let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+        let port = listener.local_addr().unwrap().port();
+        let remote = "database.remote.invalid";
+        sqlx_core::net::set_tcp_proxy(remote, 15432, port).unwrap();
+        let server = tokio::spawn(async move {
+            for _ in 0..2 {
+                let (stream, _) = listener.accept().await.unwrap();
+                drop(stream); // only transport establishment is under test
+            }
+        });
+        let pg = sqlx::postgres::PgConnectOptions::new()
+            .host(remote)
+            .port(15432)
+            .ssl_mode(sqlx::postgres::PgSslMode::VerifyFull);
+        let mysql = sqlx::mysql::MySqlConnectOptions::new()
+            .host(remote)
+            .port(15432)
+            .ssl_mode(sqlx::mysql::MySqlSslMode::VerifyIdentity);
+        assert_eq!(pg.get_host(), remote);
+        assert_eq!(mysql.get_host(), remote);
+        assert!(
+            tokio::time::timeout(
+                std::time::Duration::from_secs(3),
+                sqlx::PgConnection::connect_with(&pg)
+            )
+            .await
+            .unwrap()
+            .is_err()
+        );
+        assert!(
+            tokio::time::timeout(
+                std::time::Duration::from_secs(3),
+                sqlx::MySqlConnection::connect_with(&mysql)
+            )
+            .await
+            .unwrap()
+            .is_err()
+        );
+        tokio::time::timeout(std::time::Duration::from_secs(3), server)
+            .await
+            .unwrap()
+            .unwrap();
+        let mismatch = pg.host("other.remote.invalid");
+        let error = sqlx::PgConnection::connect_with(&mismatch)
+            .await
+            .err()
+            .unwrap();
+        assert!(error.to_string().contains("approved proxy route"));
     }
 }
