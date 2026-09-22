@@ -1,0 +1,8 @@
+/target/
+/app/node_modules/
+/app/dist/
+/dist/
+/.local/
+*.db
+*.sqlite
+
