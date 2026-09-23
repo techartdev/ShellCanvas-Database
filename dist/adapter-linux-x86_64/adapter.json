@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "id": "dev.shellcanvas.database",
+  "name": "ShellCanvas Database",
+  "version": "0.1.1",
+  "description": "Database connections through the connected SSH host, or directly from this PC.",
+  "platform": "linux-x86_64",
+  "entrypoint": "bin/shellcanvas-device",
+  "arguments": [],
+  "files": [
+    {
+      "path": "bin/shellcanvas-device",
+      "size": 12728336,
+      "sha256": "ecdbd4031bfbf531e91cc86d065022c14f0512bf3354092f6c29fd918dec98ca",
+      "executable": true
+    }
+  ],
+  "configuration": [
+    {
+      "id": "provider",
+      "label": "Provider (sqlite, postgresql, mysql, mariadb, sqlserver)",
+      "kind": "text",
+      "required": true,
+      "default": "sqlite"
+    },
+    {
+      "id": "host",
+      "label": "Database host",
+      "kind": "text",
+      "required": false,
+      "default": "localhost"
+    },
+    {
+      "id": "port",
+      "label": "Port (leave 0 for provider default)",
+      "kind": "number",
+      "required": false,
+      "default": 0
+    },
+    {
+      "id": "database",
+      "label": "Database name",
+      "kind": "text",
+      "required": false,
+      "default": ""
+    },
+    {
+      "id": "username",
+      "label": "Username",
+      "kind": "text",
+      "required": false,
+      "default": ""
+    },
+    {
+      "id": "password",
+      "label": "Password",
+      "kind": "password",
+      "required": false,
+      "default": null
+    },
+    {
+      "id": "tls",
+      "label": "Use TLS",
+      "kind": "boolean",
+      "required": false,
+      "default": true
+    },
+    {
+      "id": "trustServerCertificate",
+      "label": "Trust server certificate without identity verification",
+      "kind": "boolean",
+      "required": false,
+      "default": false
+    },
+    {
+      "id": "sqlitePath",
+      "label": "SQLite path on the adapter machine",
+      "kind": "text",
+      "required": false,
+      "default": ""
+    },
+    {
+      "id": "tcpProxyPort",
+      "label": "Managed SSH transport port (leave 0)",
+      "kind": "number",
+      "required": false,
+      "default": 0
+    }
+  ]
+}
