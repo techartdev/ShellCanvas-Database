@@ -32,8 +32,11 @@ if (app.id !== descriptor.id || app.version !== descriptor.version)
   throw new Error("App package identity/version does not match the descriptor.");
 
 const dependency = descriptor.nativeAdapter;
-if (!dependency || dependency.packages.length !== 1)
-  throw new Error("Expected one pinned native adapter package.");
+const expected = ["windows-x86_64", "linux-x86_64", "darwin-x86_64", "darwin-aarch64"];
+if (!dependency || dependency.packages.length !== expected.length)
+  throw new Error("Expected four pinned native adapter packages.");
+if (dependency.packages.some((entry, index) => entry.platform !== expected[index]))
+  throw new Error("Native adapter platform set or order changed.");
 for (const entry of dependency.packages) {
   const manifestBytes = readTree(entry.path);
   expectHash(manifestBytes, entry.sha256, `${entry.platform} adapter manifest`);
@@ -52,4 +55,4 @@ for (const entry of dependency.packages) {
     expectHash(bytes, file.sha256, file.path);
   }
 }
-console.log(`Verified committed app, ${dependency.packages.length} adapter manifest, and all native assets.`);
+console.log(`Verified committed app, ${dependency.packages.length} adapter manifests, and all native assets.`);
