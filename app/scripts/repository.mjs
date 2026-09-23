@@ -15,7 +15,7 @@ const packageBytes = await readFile(join(root, packagePath));
 const app = parseAppPackage(
   new TextDecoder("utf-8", { fatal: true }).decode(packageBytes),
 );
-const platforms = ["windows-x86_64", "linux-x86_64", "darwin-x86_64", "darwin-aarch64"];
+const platforms = ["windows-x86_64", "linux-x86_64", "macos-x86_64", "macos-aarch64"];
 const packages = [];
 for (const platform of platforms) {
   const path = `dist/adapter-${platform}/adapter.json`;

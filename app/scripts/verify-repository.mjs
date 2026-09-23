@@ -32,7 +32,7 @@ if (app.id !== descriptor.id || app.version !== descriptor.version)
   throw new Error("App package identity/version does not match the descriptor.");
 
 const dependency = descriptor.nativeAdapter;
-const expected = ["windows-x86_64", "linux-x86_64", "darwin-x86_64", "darwin-aarch64"];
+const expected = ["windows-x86_64", "linux-x86_64", "macos-x86_64", "macos-aarch64"];
 if (!dependency || dependency.packages.length !== expected.length)
   throw new Error("Expected four pinned native adapter packages.");
 if (dependency.packages.some((entry, index) => entry.platform !== expected[index]))
