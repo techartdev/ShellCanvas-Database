@@ -3,10 +3,6 @@ name: Verify Linux Database connector
 # A focused Linux build allows retrying a runner-library failure without
 # repeating the paid macOS matrix jobs.
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - '.github/workflows/build-linux-connector.yml'
   workflow_dispatch:
 
 permissions:

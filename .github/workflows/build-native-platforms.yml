@@ -3,13 +3,6 @@ name: Build Database native connectors
 # CI keeps these build artifacts for review. Release only after all platform
 # packages and their hashes have been checked together.
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - 'Cargo.toml'
-      - 'Cargo.lock'
-      - 'adapter/**'
-      - 'vendor/**'
   workflow_dispatch:
 
 permissions:

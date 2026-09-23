@@ -3,10 +3,6 @@ name: Verify macOS Database connectors
 # Focused retry after the first matrix used the updater's "darwin" name rather
 # than the Rust/native-adapter platform name "macos".
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - '.github/workflows/build-macos-connector.yml'
   workflow_dispatch:
 
 permissions:
