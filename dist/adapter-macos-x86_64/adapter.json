@@ -4,14 +4,14 @@
   "name": "ShellCanvas Database",
   "version": "0.1.1",
   "description": "Database connections through the connected SSH host, or directly from this PC.",
-  "platform": "windows-x86_64",
-  "entrypoint": "bin/shellcanvas-device.exe",
+  "platform": "macos-x86_64",
+  "entrypoint": "bin/shellcanvas-device",
   "arguments": [],
   "files": [
     {
-      "path": "bin/shellcanvas-device.exe",
-      "size": 9608704,
-      "sha256": "76e5f2a08e81c76fe5cfcab78731410a5900750fe8d615484e637a1f0ab287f8",
+      "path": "bin/shellcanvas-device",
+      "size": 10773704,
+      "sha256": "62d83d83f3d5f46d23a706be7453a5335bbf54f7fddf9b20cd7ea853d0151d50",
       "executable": true
     }
   ],

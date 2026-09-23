@@ -1,0 +1,55 @@
+name: Verify macOS Database connectors
+
+# Focused retry after the first matrix used the updater's "darwin" name rather
+# than the Rust/native-adapter platform name "macos".
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-x86_64
+            arch: x86_64
+            runner: macos-15-intel
+          - platform: macos-aarch64
+            arch: arm64
+            runner: macos-15
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - name: Install Rust
+        run: |
+          rustup toolchain install stable --profile minimal
+          rustup default stable
+          rustc --version
+      - name: Build and validate native connector
+        run: |
+          cargo run --locked --manifest-path vendor/shellcanvas-adapter-sdk/Cargo.toml --bin shellcanvas-adapter -- build adapter dist/adapter-${{ matrix.platform }}
+          cargo run --locked --manifest-path vendor/shellcanvas-adapter-sdk/Cargo.toml --bin shellcanvas-adapter -- validate dist/adapter-${{ matrix.platform }}/adapter.json
+      - name: Check binary architecture and package identity
+        env:
+          PLATFORM: ${{ matrix.platform }}
+          ARCH: ${{ matrix.arch }}
+        run: |
+          python3 - <<'PY'
+          import json, os, pathlib, subprocess
+          root = pathlib.Path('dist') / ('adapter-' + os.environ['PLATFORM'])
+          manifest = json.loads((root / 'adapter.json').read_text())
+          assert manifest['platform'] == os.environ['PLATFORM']
+          assert manifest['version'] == '0.1.1'
+          binary = root / manifest['entrypoint']
+          assert binary.is_file()
+          assert subprocess.check_output(['lipo', '-archs', binary], text=True).strip() == os.environ['ARCH']
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: database-adapter-${{ matrix.platform }}
+          path: dist/adapter-${{ matrix.platform }}/
+          if-no-files-found: error
+          retention-days: 7

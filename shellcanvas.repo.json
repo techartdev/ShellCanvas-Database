@@ -2,21 +2,36 @@
   "format": 1,
   "kind": "app-repository",
   "id": "dev.shellcanvas.database",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "title": "ShellCanvas Database",
   "description": "Query SQL Server, PostgreSQL, MySQL/MariaDB and SQLite from ShellCanvas.",
   "package": {
     "path": "app/dist/app.shellcanvas.json",
-    "sha256": "205d6c4717defa9713cee321af318b3092fceb88264ffce67aca2a16af6a3bc1"
+    "sha256": "465c74b45a479cc82ecd2a741cac0ab604c69ee0692c66c2febe1e9cde618189"
   },
   "nativeAdapter": {
     "id": "dev.shellcanvas.database",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "packages": [
       {
         "platform": "windows-x86_64",
         "path": "dist/adapter-windows-x86_64/adapter.json",
-        "sha256": "1de82c8002ba973dc7ea39c4c687e37b66a58adacb9e879b1abce87ee982cc1c"
+        "sha256": "5a396816484cd6344b11c589eac19a6cc5c78780ba04533844eb452c65ff8813"
+      },
+      {
+        "platform": "linux-x86_64",
+        "path": "dist/adapter-linux-x86_64/adapter.json",
+        "sha256": "ea17f8b67da947072bbec0e28b57d39961865192d37cbfb580852b0f2da9a75d"
+      },
+      {
+        "platform": "macos-x86_64",
+        "path": "dist/adapter-macos-x86_64/adapter.json",
+        "sha256": "7c7886446f49e2b136b7e85d618ef177c52858296f32fac8975e6c78721fa2c8"
+      },
+      {
+        "platform": "macos-aarch64",
+        "path": "dist/adapter-macos-aarch64/adapter.json",
+        "sha256": "07b92bd4b0681ece3acd4db73f74e1e5638902324ae5e359106b2138cd861339"
       }
     ]
   }

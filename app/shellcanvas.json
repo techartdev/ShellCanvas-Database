@@ -3,7 +3,7 @@
   "format": 1,
   "kind": "app",
   "id": "dev.shellcanvas.database",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "title": "ShellCanvas Database",
   "description": "Browse database schemas, run SQL, inspect typed results and export CSV.",
   "permissions": [

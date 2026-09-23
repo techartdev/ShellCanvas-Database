@@ -1,3 +1,6 @@
 app/dist/app.shellcanvas.json -text
 dist/adapter-windows-x86_64/bin/*.exe -text
 dist/adapter-windows-x86_64/** -text
+dist/adapter-linux-x86_64/bin/* -text
+dist/adapter-macos-x86_64/bin/* -text
+dist/adapter-macos-aarch64/bin/* -text

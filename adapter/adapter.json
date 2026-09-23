@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "dev.shellcanvas.database",
   "name": "ShellCanvas Database",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Database connections through the connected SSH host, or directly from this PC.",
   "platform": "current",
   "entrypoint": "bin/shellcanvas-device{exe}",
